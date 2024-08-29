@@ -27,13 +27,13 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t bookstore-api .
+          docker build -t mongodb .
 
       - name: Run Docker containers
         run: |
           docker-compose up -d
 
-      - name: Wait for Localhost to start
+      - name: Wait for MongoDB to start
         run: |
           sleep 5 # Increase wait time if necessary
 
