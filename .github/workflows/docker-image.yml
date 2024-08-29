@@ -35,7 +35,7 @@ jobs:
 
       - name: Wait for MongoDB and Application to start
         run: |
-          sleep 30 # Ensure MongoDB and the application have time to start
+          sleep 10 # Ensure MongoDB and the application have time to start
 
       - name: Check Application Logs
         run: |
@@ -57,7 +57,7 @@ jobs:
         run: |
           curl -X GET http://localhost:3000/books \
           -w "%{http_code}" -o response_get_all.log -s
-          tail -n 1 response_get_all.log | grep -q "200" || exit 1
+          tail -n 1 response_get_all.log | grep -q "200" || (cat response_get_all.log && exit 1)
 
       - name: Test Get Book by ISBN
         run: |
