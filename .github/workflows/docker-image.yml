@@ -10,7 +10,7 @@ on:
 
 jobs:
   build-and-test:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted] # Use self-hosted runner with more resources
 
     steps:
       - name: Checkout code
@@ -28,14 +28,17 @@ jobs:
       - name: Build Docker image
         run: |
           docker build -t bookstore-api .
+        timeout-minutes: 30 # Increase timeout if necessary
 
       - name: Run Docker containers
         run: |
           docker-compose up -d
 
-      - name: Wait for MongoDB to start
-        run: |
-          sleep 30 # Increase wait time if necessary
+      - name: Check disk usage
+        run: df -h
+
+      - name: Check memory usage
+        run: free -h
 
       - name: Seed the database
         run: |
