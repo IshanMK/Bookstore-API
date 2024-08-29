@@ -43,7 +43,7 @@ jobs:
 
       - name: Test Create Book
         run: |
-          curl -X POST http://localhost:3000/books \
+          curl -X POST http://mongodb:3000/books \
           -H "Content-Type: application/json" \
           -d '{"title": "The Art of Computer Programming", "author": "Donald Knuth", "isbn": "9780201896831", "price": 89.99}' \
           -w "%{http_code}" -o response.log
@@ -51,19 +51,19 @@ jobs:
 
       - name: Test Get All Books
         run: |
-          curl -X GET http://localhost:3000/books \
+          curl -X GET http://mongodb:3000/books \
           -w "%{http_code}" -o response.log
           grep -q "200" response.log || exit 1
 
       - name: Test Get Book by ISBN
         run: |
-          curl -X GET http://localhost:3000/books/isbn/9780201896831 \
+          curl -X GET http://mongodb:3000/books/isbn/9780201896831 \
           -w "%{http_code}" -o response.log
           grep -q "200" response.log || exit 1
 
       - name: Test Update Book
         run: |
-          curl -X PUT http://localhost:3000/books/isbn/9780201896831 \
+          curl -X PUT http://mongodb:3000/books/isbn/9780201896831 \
           -H "Content-Type: application/json" \
           -d '{"price": 99.99}' \
           -w "%{http_code}" -o response.log
@@ -71,7 +71,7 @@ jobs:
 
       - name: Test Delete Book
         run: |
-          curl -X DELETE http://localhost:3000/books/isbn/9780201896831 \
+          curl -X DELETE http://mongodb:3000/books/isbn/9780201896831 \
           -w "%{http_code}" -o response.log
           grep -q "200" response.log || exit 1
 
