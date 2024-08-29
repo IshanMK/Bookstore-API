@@ -23,13 +23,15 @@ jobs:
         run: |
           docker build -t bookstore-api .
 
-      - name: Run Docker container
+      - name: Run Docker containers
         run: |
-          docker run -d -p 3000:3000 -p 27017:27017 --name bookstore-api bookstore-api
+          docker network create bookstore-network || true
+          docker run -d --name mongodb --network bookstore-network -p 27017:27017 mongo:latest
+          docker run -d --name bookstore-api --network bookstore-network -p 3000:3000 bookstore-api
 
-      - name: Wait for Docker container
+      - name: Wait for MongoDB to start
         run: |
-          sleep 10 # Wait for the container to start
+          sleep 15 # Wait for MongoDB to be fully up
 
       - name: Seed the database
         run: |
@@ -69,7 +71,7 @@ jobs:
           -w "%{http_code}" -o response.log
           grep -q "200" response.log || exit 1
 
-      - name: Stop and remove Docker container
+      - name: Stop and remove Docker containers
         run: |
-          docker stop bookstore-api || true
-          docker rm bookstore-api || true
+          docker stop bookstore-api mongodb || true
+          docker rm bookstore-api mongodb || true

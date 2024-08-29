@@ -1,17 +1,22 @@
 const mongoose = require("mongoose");
-const Book = require("./models"); // Import the Book model
+const Book = require("./models"); // Adjust the path if necessary
 
-// Connect to MongoDB
-mongoose
-  .connect("mongodb://localhost:27017/bookstore", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(async () => {
-    // Clear existing data
-    await Book.deleteMany({});
+const mongoURI = "mongodb://localhost:27017/bookstore"; // Local MongoDB URI
 
-    // Sample book entries
+async function seedDB() {
+  try {
+    console.log("Connecting to MongoDB...");
+    await mongoose.connect(mongoURI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+
+    console.log("Connected to MongoDB");
+
+    console.log("Deleting existing data...");
+    await Book.deleteMany({}); // Clear existing data
+
+    console.log("Inserting new data...");
     const books = [
       {
         title: "JavaScript: The Good Parts",
@@ -39,12 +44,14 @@ mongoose
       },
     ];
 
-    // Insert sample books into the database
     await Book.insertMany(books);
 
     console.log("Database seeded successfully");
-    mongoose.connection.close();
-  })
-  .catch((err) => {
-    console.error("Error seeding the database:", err);
-  });
+  } catch (err) {
+    console.error("Error seeding database:", err.message);
+  } finally {
+    await mongoose.connection.close();
+  }
+}
+
+seedDB();
