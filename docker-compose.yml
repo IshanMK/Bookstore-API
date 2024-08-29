@@ -1,23 +1,21 @@
 version: "3"
 services:
   app:
-    image: bookstore-api
+    build: .
+    ports:
+      - "5000:3000"
     depends_on:
       - mongodb
-    ports:
-      - "3000:3000"
-    deploy:
-      resources:
-        limits:
-          cpus: "0.5"
-          memory: "512M"
+    environment:
+      - MONGODB_URI=mongodb://mongodb:27017/bookstore
+    command: ["node", "app.js"]
 
   mongodb:
     image: mongo
     ports:
       - "27017:27017"
-    deploy:
-      resources:
-        limits:
-          cpus: "0.5"
-          memory: "512M"
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mongo_data:

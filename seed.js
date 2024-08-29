@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Book = require("./models"); // Adjust the path if necessary
 
-const mongoURI = "mongodb://localhost:27017/bookstore"; // Local MongoDB URI
+const mongoURI = "mongodb://mongodb:27017/bookstore"; // Local MongoDB URI
 
 async function seedDB() {
   try {

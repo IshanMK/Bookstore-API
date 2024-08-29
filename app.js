@@ -3,12 +3,12 @@ const mongoose = require("mongoose");
 const Book = require("./models");
 
 const app = express();
-const port = 3000;
+const port = 5000;
 
 app.use(express.json());
 
 // Connect to MongoDB
-mongoose.connect("mongodb://localhost:27017/bookstore", {
+mongoose.connect("mongodb://mongodb:27017/bookstore", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
