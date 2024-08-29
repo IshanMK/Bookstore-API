@@ -25,9 +25,7 @@ jobs:
 
       - name: Run Docker containers
         run: |
-          docker network create bookstore-network || true
-          docker run -d --name mongodb --network bookstore-network -p 27017:27017 mongo:latest
-          docker run -d --name bookstore-api --network bookstore-network -p 3000:3000 bookstore-api
+          docker-compose up -d
 
       - name: Wait for MongoDB to start
         run: |
@@ -35,7 +33,7 @@ jobs:
 
       - name: Seed the database
         run: |
-          docker exec bookstore-api node seed.js
+          docker-compose exec app node seed.js
 
       - name: Test Create Book
         run: |
@@ -73,5 +71,4 @@ jobs:
 
       - name: Stop and remove Docker containers
         run: |
-          docker stop bookstore-api mongodb || true
-          docker rm bookstore-api mongodb || true
+          docker-compose down
