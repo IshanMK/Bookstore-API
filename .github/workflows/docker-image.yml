@@ -55,14 +55,15 @@ jobs:
 
       - name: Test Get All Books
         run: |
+          # Send the GET request and capture the output and status code
           curl -X GET http://localhost:3000/books \
-          -w "%{http_code}" -o response_get_all.log -s
+          -w "\n%{http_code}" -o response_get_all.log -s
 
-          # Isolate the status code
+          # Extract the status code
           status_code=$(tail -n 1 response_get_all.log)
 
-          # Remove the status code from the log to only keep the response body
-          sed -i '' -e '$ d' response_get_all.log
+          # Remove the status code from the log to keep only the response body
+          head -n -1 response_get_all.log > response_body.log && mv response_body.log response_get_all.log
 
           # Check if the status code is 200
           if [ "$status_code" != "200" ]; then
