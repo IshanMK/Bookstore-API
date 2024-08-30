@@ -72,9 +72,20 @@ jobs:
 
       - name: Test Get Book by ISBN
         run: |
-          curl -X GET http://localhost:3000/books/isbn/9780201896831 \
-          -w "%{http_code}" -o response.log
-          grep -q "200" response.log || exit 1
+          # Send the GET request and capture the output and status code
+          response=$(curl -s -w "\n%{http_code}" -X GET http://localhost:3000/books/isbn/9780201896831)
+          body=$(echo "$response" | head -n -1)  # Extract the body (everything except the last line)
+          status_code=$(echo "$response" | tail -n 1)  # Extract the status code (the last line)
+
+          # Check if the status code is 200
+          if [ "$status_code" -ne 200 ]; then
+            echo "Unexpected status code: $status_code"
+            echo "$body"
+            exit 1
+          fi
+
+          # Optionally, print the response body
+          echo "$body"
 
       - name: Test Update Book
         run: |
